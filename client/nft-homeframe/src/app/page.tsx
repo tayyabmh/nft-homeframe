@@ -3,6 +3,9 @@
 import { useEffect, useState } from 'react';
 import { fetchRandomNFT, setNFTShow } from '../utils/fetchRandomNFT';
 
+const ONE_HOUR_IN_MS = 3600000;
+const TEN_SECONDS_IN_MS = 10000;
+
 import Image from 'next/image';
 type NFT = {
   id: number;
@@ -15,6 +18,7 @@ type NFT = {
 
 const Home = () => {
   const [nft, setNft] = useState<NFT | null>(null);
+  const [imageError, setImageError] = useState(false);
 
   const loadRandomNFT = async () => {
     try {
@@ -24,6 +28,13 @@ const Home = () => {
       console.error('Failed to fetch image:', error);
     }
   };
+
+  useEffect(() => {
+    if(imageError) {
+      setImageError(false);
+      loadRandomNFT();
+    }
+  }, [imageError]);
 
   const hideNFT = async () => {
     try {
@@ -40,7 +51,7 @@ const Home = () => {
     loadRandomNFT();
     const interval = setInterval(() => {
       loadRandomNFT();
-    }, 3600000); // 60s * 60m * 1000ms = 1 hour
+    }, ONE_HOUR_IN_MS); // 60s * 60m * 1000ms = 1 hour
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
@@ -52,7 +63,9 @@ const Home = () => {
           src={nft.imageUrl ?? ''} alt={nft.name ?? ''} 
           width={750}
           height={750} 
-          className="max-w-full max-h-screen object-contain" />
+          className="max-w-full max-h-screen object-contain" 
+          onError={() => setImageError(true)}
+          />
           <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-75 text-white p-4">
             <h1 className="text-lg font-bold">{nft.name}</h1>
             <p>{nft.description}</p>

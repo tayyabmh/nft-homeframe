@@ -14,25 +14,34 @@ type NFT = {
 };
 
 // Hard-coded SHA-256 hash of the password
-const hardcodedHash = '5d47ec79f3b591160d8d1831da812551cbcccd0c2bc771129902c1bdbce19568';
+const hardcodedHash = process.env.NEXT_PUBLIC_ADMIN_PASS;
 
 const hashPassword = (password: string) => {
   return crypto.createHash('sha256').update(password).digest('hex');
 };
 
+
 const Home = () => {
   const [nft, setNft] = useState<NFT | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passwordInput, setPasswordInput] = useState('');
+  const [imageError, setImageError] = useState(false);
 
   const loadRandomNFT = async () => {
     try {
       const newNFT = await fetchRandomNFT();
       setNft(newNFT);
     } catch (error) {
-      console.error('Failed to fetch image:', error);
+      console.error('Failed to fetch image, attempting one retry:', error);
     }
   };
+
+  useEffect(() => {
+    if(imageError) {
+      setImageError(false);
+      loadRandomNFT();
+    }
+  }, [imageError]);
 
   const hideNFT = async () => {
     try {
@@ -50,6 +59,7 @@ const Home = () => {
 
     if (inputHash === hardcodedHash) {
       setIsAuthenticated(true);
+      setPasswordInput('');
     } else {
       alert('Incorrect password');
     }
@@ -89,6 +99,7 @@ const Home = () => {
                 width={750}
                 height={750}
                 className="max-w-full max-h-screen object-contain"
+                onError={() => setImageError(true)}
               />
               <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-75 text-white p-4">
                 <h1 className="text-lg font-bold">{nft.name}</h1>
