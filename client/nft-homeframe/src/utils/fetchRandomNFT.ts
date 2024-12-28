@@ -1,7 +1,7 @@
 'use server';
 
 import { db, nfts } from '../db/db';
-import { count, eq, and, ne } from 'drizzle-orm';
+import { count, eq, and } from 'drizzle-orm';
 
 export async function fetchRandomNFT() {
     // Get Total Number of Rows
@@ -23,8 +23,9 @@ export async function fetchRandomNFT() {
             owner: nfts.owner,
         })
         .from(nfts)
-        .where(and(
-            eq(nfts.show, true),
+        .where(
+            and(
+                eq(nfts.show, true),
             )
         )
         .offset(randomIndex)

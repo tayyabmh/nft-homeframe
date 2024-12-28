@@ -2,7 +2,7 @@ import { pgTable, serial, text, varchar, boolean } from 'drizzle-orm/pg-core';
 import postgres from 'postgres';
 import { drizzle } from 'drizzle-orm/postgres-js';
 
-const connString = process.env.DATABASE_CONNECTION_STRING!;
+const connString = process.env.DATABASE_URL!;
 export const client = postgres(connString, { prepare: false });
 export const db = drizzle(client);
 
