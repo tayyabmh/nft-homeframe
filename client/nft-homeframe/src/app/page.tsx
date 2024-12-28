@@ -66,10 +66,10 @@ const Home = () => {
           className="max-w-full max-h-screen object-contain" 
           onError={() => setImageError(true)}
           />
-          <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-75 text-white p-4">
+          <div className="absolute bottom-0 left-0 w-full bg-gray-800 bg-opacity-75 text-white p-4">
             <h1 className="text-lg font-bold">{nft.name}</h1>
-            <p>{nft.description}</p>
-            <p>Owner: {nft.owner}</p>
+            <p className="italic">{(nft.description ?? '').length > 400 ? `${nft.description?.substring(0, 400)}...` : nft.description}</p>
+            <p><span className="font-bold">Owner:</span> {nft.owner}</p>
           </div>
         </div>
       )}
