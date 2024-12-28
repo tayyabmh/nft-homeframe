@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { fetchRandomNFT, setNFTShow } from '../../utils/fetchRandomNFT';
+import { ArrowsPointingInIcon, ArrowsPointingOutIcon } from '@heroicons/react/24/solid';
 
 const ONE_HOUR_IN_MS = 3600000;
 const TEN_SECONDS_IN_MS = 10000;
@@ -19,6 +20,7 @@ type NFT = {
 const Home = () => {
   const [nft, setNft] = useState<NFT | null>(null);
   const [imageError, setImageError] = useState(false);
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
   const loadRandomNFT = async () => {
     try {
@@ -47,6 +49,16 @@ const Home = () => {
     }
   }
 
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        setIsFullscreen(true);
+    } else {
+        document.exitFullscreen();
+        setIsFullscreen(false);
+    }
+  }
+
   useEffect(() => {
     loadRandomNFT();
     const interval = setInterval(() => {
@@ -57,6 +69,17 @@ const Home = () => {
   }, []);
   return (
     <div className="flex flex-col items-center justify-center h-screen">
+              <button
+        onClick={toggleFullscreen}
+        className="absolute top-4 right-4 z-10 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
+        aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}
+      >
+        {isFullscreen ? (
+          <ArrowsPointingInIcon className="w-6 h-6 text-white" />
+        ) : (
+          <ArrowsPointingOutIcon className="w-6 h-6 text-white" />
+        )}
+      </button>
       {nft && (
         <div className="relative w-full h-full flex justify-center items-center">
           <div className="rotate-90">
