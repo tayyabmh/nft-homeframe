@@ -68,8 +68,8 @@ const Home = () => {
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
-              <button
+    <div className="flex flex-col items-center justify-center h-screen bg-black">
+        <button
         onClick={toggleFullscreen}
         className="absolute top-4 right-4 z-10 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
         aria-label={isFullscreen ? 'Exit fullscreen' : 'Enter fullscreen'}

@@ -56,7 +56,7 @@ const Home = () => {
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
   return (
-    <div className="flex flex-col items-center justify-center h-screen">
+    <div className="flex flex-col items-center justify-center h-screen bg-black">
       {nft && (
         <div className="relative w-full h-full flex justify-center items-center">
           <Image 
