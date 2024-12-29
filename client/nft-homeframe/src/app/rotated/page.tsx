@@ -21,6 +21,7 @@ const Home = () => {
   const [nft, setNft] = useState<NFT | null>(null);
   const [imageError, setImageError] = useState(false);
     const [isFullscreen, setIsFullscreen] = useState(false);
+    const [isCursorVisible, setIsCursorVisible] = useState(true);
 
   const loadRandomNFT = async () => {
     try {
@@ -59,6 +60,18 @@ const Home = () => {
     }
   }
 
+  const handleMouseMove = () => {
+    setIsCursorVisible(true);
+    // Hide cursor after 2 seconds of no movement
+    const timeoutId = setTimeout(() => {
+      if (isFullscreen) {
+        setIsCursorVisible(false);
+      }
+    }, 2000);
+
+    return () => clearTimeout(timeoutId);
+  };
+
   useEffect(() => {
     loadRandomNFT();
     const interval = setInterval(() => {
@@ -68,7 +81,12 @@ const Home = () => {
     return () => clearInterval(interval); // Cleanup on unmount
   }, []);
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-black">
+    <div 
+      className={`flex flex-col items-center justify-center h-screen bg-black ${
+        isFullscreen && !isCursorVisible ? 'cursor-none' : ''
+      }`}
+      onMouseMove={handleMouseMove}
+    >
         <button
         onClick={toggleFullscreen}
         className="absolute top-4 right-4 z-10 p-2 rounded-full bg-gray-800/50 hover:bg-gray-700/50 transition-colors"
